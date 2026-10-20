@@ -36,7 +36,7 @@ jobs:
           echo test, and deploy your project.
 
       - run : |
-          ll / > 1.txt
+          ls -la / > 1.txt
           pwd >> 1.txt
           cat 1.txt
 
