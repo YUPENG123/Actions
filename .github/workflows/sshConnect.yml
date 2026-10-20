@@ -35,10 +35,10 @@ jobs:
           echo Add other actions to build,
           echo test, and deploy your project.
 
-      - run : |
-          ls -la / > 1.txt
-          pwd >> 1.txt
-          cat 1.txt
+      # - run : |
+          # ls -la / > 1.txt
+          # pwd >> 1.txt
+          # cat 1.txt
 
       # - uses: actions/upload-artifact@v4
         # with:
