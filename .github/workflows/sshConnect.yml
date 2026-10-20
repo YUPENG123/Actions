@@ -49,12 +49,7 @@ jobs:
       #     retention-days: 7         # [可选] 设置在云端只保存 7 天
 
 
-      # - name: Setup SSH Debug Session
-      #   uses: lhotari/action-upterm@v1
-      #   timeout-minutes: 60 # 限制该步骤最多运行 60 分钟
-      #   with:
-      #     ## 可选：只允许触发工作流的人连接（提高安全性）
-      #     limit-access-to-actor: true 
+     
 
       - name: ZeroTier
         uses: zerotier/github-action@v1.0.1
@@ -63,5 +58,10 @@ jobs:
           auth_token: ${{ secrets.ZEROTIER_CENTRAL_TOKEN }}
 
 
-
+      - name: Setup SSH Debug Session
+        uses: lhotari/action-upterm@v1
+        timeout-minutes: 60 # 限制该步骤最多运行 60 分钟
+        with:
+          ## 可选：只允许触发工作流的人连接（提高安全性）
+          limit-access-to-actor: true 
           
