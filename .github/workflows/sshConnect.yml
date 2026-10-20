@@ -61,7 +61,7 @@ jobs:
       - name: Setup SSH Debug Session
         uses: lhotari/action-upterm@v1
         timeout-minutes: 60 # 限制该步骤最多运行 60 分钟
-        with:
+        # with:
           ## 可选：只允许触发工作流的人连接（提高安全性）
-          limit-access-to-actor: true 
+          # limit-access-to-actor: true 
           
