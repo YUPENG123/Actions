@@ -63,11 +63,5 @@ jobs:
           auth_token: ${{ secrets.ZEROTIER_CENTRAL_TOKEN }}
 
 
-      - name: SSH and Deploy
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: 'uptermd.upterm.dev'
-          username: ''
-          script: |
-            echo "成功连上了我的物理电脑！"
+
           
