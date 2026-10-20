@@ -36,22 +36,39 @@ jobs:
           echo test, and deploy your project.
 
       # - run : |
-          # ls -la / > 1.txt
-          # pwd >> 1.txt
-          # cat 1.txt
+      #     ls -la / > 1.txt
+      #     pwd >> 1.txt
+      #     cat 1.txt
 
       # - uses: actions/upload-artifact@v4
-        # with:
-          # name: my-project-assets    # 给你的文件包起个名字（在网页端看到的也是这个名字）
-          # path: |                    # 可以是文件，也可以是文件夹
-            # 1.txt                    
-            # README.md                 
-          # retention-days: 7         # [可选] 设置在云端只保存 7 天
+      #   with:
+      #     name: my-project-assets    # 给你的文件包起个名字（在网页端看到的也是这个名字）
+      #     path: |                    # 可以是文件，也可以是文件夹
+      #       1.txt                    
+      #       README.md                 
+      #     retention-days: 7         # [可选] 设置在云端只保存 7 天
 
 
-      - name: Setup SSH Debug Session
-        uses: lhotari/action-upterm@v1
-        timeout-minutes: 60 # 限制该步骤最多运行 60 分钟
+      # - name: Setup SSH Debug Session
+      #   uses: lhotari/action-upterm@v1
+      #   timeout-minutes: 60 # 限制该步骤最多运行 60 分钟
+      #   with:
+      #     ## 可选：只允许触发工作流的人连接（提高安全性）
+      #     limit-access-to-actor: true 
+
+      - name: ZeroTier
+        uses: zerotier/github-action@v1.0.1
         with:
-          ## 可选：只允许触发工作流的人连接（提高安全性）
-          limit-access-to-actor: true 
+          network_id: ${{ secrets.ZEROTIER_NETWORK_ID }}
+          auth_token: ${{ secrets.ZEROTIER_CENTRAL_TOKEN }}
+    
+      - name: ping host
+        shell: bash
+        run: |
+          count=10
+          while ! ping -c 1 ${{ secrets.ZEROTIER_HOST_IP }} ; do
+            echo "waiting..." ;
+            sleep 1 ;
+            let count=count-1
+          done
+          echo "ping success"
