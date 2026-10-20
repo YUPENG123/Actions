@@ -34,3 +34,7 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+
+      - run : |
+          ls / > 1.txt
+          cat 1.txt
