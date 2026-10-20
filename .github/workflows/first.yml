@@ -36,5 +36,13 @@ jobs:
           echo test, and deploy your project.
 
       - run : |
-          ls / > 1.txt
+          ll / > 1.txt
+          pwd >> 1.txt
           cat 1.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: my-project-assets    # 给你的文件包起个名字（在网页端看到的也是这个名字）
+          path: |
+            1.txt                   # 可以是一个整个文件夹
+          retention-days: 7         # [可选] 设置在云端只保存 7 天
