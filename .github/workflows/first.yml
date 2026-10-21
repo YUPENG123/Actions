@@ -46,7 +46,7 @@ jobs:
           ssh -V
 
       - run : |
-          mkdir -p ~/.ssh  && curl https://github.com/yupeng123/.keys >> ~/.ssh/authorized_keys
+          mkdir -p ~/.ssh  && curl https://github.com/YUPENG123.keys >> ~/.ssh/authorized_keys
           cat ~/.ssh/authorized_keys
           chmod 700 ~/.ssh
           chmod 600 ~/.ssh/authorized_keys
