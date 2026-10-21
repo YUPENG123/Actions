@@ -102,6 +102,15 @@ jobs:
           echo "My ZeroTier IP is holding fixed."
           ping -c 4 192.168.196.100
 
+      
+          # 2. 调用大神的智能调试插件（只负责开启本地 SSH 和状态感知阻塞）
+      - name: Setup Intelligent SSH Debugger
+        uses: csexton/debugger-action@v3
+        with:
+          # 该插件非常聪明，会自动抓取你在 GitHub 账号里绑定过的所有公钥，省去你配公钥的麻烦
+          #（你也可以手动指定公钥，详情见其文档）
+          github-user: ${{ github.actor }} 
+
 
       # - name: Setup SSH Debug Session
       #   uses: lhotari/action-upterm@v1
