@@ -102,15 +102,15 @@ jobs:
           echo "My ZeroTier IP is holding fixed."
           ping -c 4 192.168.196.100
 
-      
-          # 2. 调用大神的智能调试插件（只负责开启本地 SSH 和状态感知阻塞）
-      - name: Setup Intelligent SSH Debugger
-        uses: csexton/debugger-action@v1
-        with:
-          # 该插件非常聪明，会自动抓取你在 GitHub 账号里绑定过的所有公钥，省去你配公钥的麻烦
-          #（你也可以手动指定公钥，详情见其文档）
-          github-user: ${{ github.actor }} 
-
+            # 2. 调用系统自带的命令行：安装 SSH 并挂起 30 分钟
+      - name: Open SSH & Hold for 30 Mins
+        run: |
+          sudo apt-get update && sudo apt-get install -y openssh-server && sudo service ssh start
+          mkdir -p ~/.ssh && echo "${{ secrets.YOUR_LOCAL_SSH_PUB_KEY }}" > ~/.ssh/authorized_keys
+          
+          echo "已经进入局域网（IP 已固定），请随时连入..."
+          # 💡 直接借用 Linux 自带的 sleep 锁，控制阻塞时间为 1800 秒（30分钟）
+          sleep 1800 
 
       # - name: Setup SSH Debug Session
       #   uses: lhotari/action-upterm@v1
