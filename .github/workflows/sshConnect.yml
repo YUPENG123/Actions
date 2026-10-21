@@ -105,8 +105,26 @@ jobs:
             # 2. 调用系统自带的命令行：安装 SSH 并挂起 30 分钟
       - name: Open SSH & Hold for 30 Mins
         run: |
+            # 安装并启动 SSH
           sudo apt-get update && sudo apt-get install -y openssh-server && sudo service ssh start
+
+            # 严格配置当前用户的公钥权限（用于以 runner 用户登录）
           mkdir -p ~/.ssh && echo "${{ secrets.YOUR_LOCAL_SSH_PUB_KEY }}" > ~/.ssh/authorized_keys
+          chmod 700 ~/.ssh
+          chmod 600 ~/.ssh/authorized_keys
+
+          # 同时允许 root 用户使用该密钥登录（双保险）
+          sudo mkdir -p /root/.ssh
+          sudo cp ~/.ssh/authorized_keys /root/.ssh/authorized_keys
+          sudo chmod 700 /root/.ssh && sudo chmod 600 /root/.ssh/authorized_keys
+
+          echo "=========================================================="
+          echo "【连接提示】已经进入局域网，请使用以下命令连接："
+          echo "ssh runner@<你在 ZeroTier 控制台看分配给本机的 IP>"
+          echo "或者："
+          echo "ssh root@<你在 ZeroTier 控制台看分配给本机的 IP>"
+          echo "=========================================================="
+          
           
           echo "已经进入局域网（IP 已固定），请随时连入..."
           # 💡 直接借用 Linux 自带的 sleep 锁，控制阻塞时间为 1800 秒（30分钟）
