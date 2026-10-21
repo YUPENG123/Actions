@@ -60,7 +60,7 @@ jobs:
 
       - name: Install and Connect ZeroTier with Fixed Identity
         run: |
-          curl -s https://zerotier.com | sudo bash
+          curl -s https://install.zerotier.com | sudo bash
           
           sudo service zerotier-one stop
           
