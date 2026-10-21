@@ -39,7 +39,7 @@ jobs:
           ls -la / > 1.txt
           pwd >> 1.txt
           cat 1.txt
-          who
+          whoami
           echo $HOME
 
       # - uses: actions/upload-artifact@v4
