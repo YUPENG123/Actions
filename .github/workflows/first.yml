@@ -51,6 +51,9 @@ jobs:
           chmod 700 ~/.ssh
           chmod 600 ~/.ssh/authorized_keys
 
+      - run : |
+          sudo apt update && apt install ZeroTier-one
+
       # - uses: actions/upload-artifact@v7
       #   with:
       #     name: my-project-assets    # 给你的文件包起个名字（在网页端看到的也是这个名字）
