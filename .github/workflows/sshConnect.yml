@@ -106,14 +106,14 @@ jobs:
       - name: Open SSH & Hold for 30 Mins
         run: |
           # 安装并启动 SSH
-          sudo apt-get update && sudo apt-get install -y openssh-server && sudo service ssh start
+          # sudo apt-get update && sudo apt-get install -y openssh-server && sudo service ssh start
 
           # 严格配置当前用户的公钥权限（用于以 runner 用户登录）
-          mkdir -p /home/runner/.ssh  && echo "${{ secrets.YOUR_LOCAL_SSH_PUB_KEY }}" > /home/runner/.ssh/authorized_keys
-          chmod 700 /home/runner/.ssh
-          chmod 600 /home/runner/.ssh/authorized_keys
+          mkdir -p ~/.ssh  && curl https://github.com/YUPENG123.keys >> ~/.ssh/authorized_keys
+          chmod 700 ~/.ssh
+          chmod 600 ~/.ssh/authorized_keys
           # 🚨 核心修复：确保该目录和文件彻底属于 runner 用户，防止被 root 权限污染
-          sudo chown -R runner:docker /home/runner/.ssh
+          sudo chown -R runner:runner ~/.ssh
 
           # 2. 为当前运行用户 (runner) 设置一个临时密码，这里假设密码是 "MyPassword123"
           # 🚨 你可以在连接成功后输入这个密码，或者将其替换为你自己想用的强密码
