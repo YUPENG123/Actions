@@ -60,29 +60,47 @@ jobs:
 
       - name: Install and Connect ZeroTier with Fixed Identity
         run: |
+          # 1. 自动获取当前系统的 Ubuntu 代号（比如 noble、jammy 等）
+          UBUNTU_CODENAME=$(lsb_release -sc)
+          echo "检测到当前 Ubuntu 系统代号为: ${UBUNTU_CODENAME}"
+
+          # 2. 安装基础依赖
           sudo apt-get update
           sudo apt-get install -y curl gnupg
-          curl -s 'https://raw.githubusercontent.com/zerotier/ZeroTierOne/main/doc/contact%40zerotier.com.gpg' | gpg --import && \
-              if z=$(curl -s 'https://install.zerotier.com/' | gpg); then echo "$z" | sudo bash; fi
 
+          # 3. 添加 ZeroTier 官方 GPG 密钥
+          curl -s 'https://raw.githubusercontent.com/zerotier/ZeroTierOne/main/doc/contact%40zerotier.com.gpg' | gpg --dearmor | sudo tee /usr/share/keyrings/zerotierone-archive-keyring.gpg >/dev/null
+
+          # 4. 动态写入软件源（使用刚才获取到的系统代号）
+          echo "deb [signed-by=/usr/share/keyrings/zerotierone-archive-keyring.gpg] http://zerotier.com{UBUNTU_CODENAME} ${UBUNTU_CODENAME} main" | sudo tee /etc/apt/sources.list.d/zerotierone.list
+
+          # 5. 更新并安装 ZeroTier
+          sudo apt-get update
+          sudo apt-get install -y zerotier-one
+
+          # 6. 彻底停止由于安装自动启动的服务，防止干扰
           sudo systemctl stop zerotier-one
 
+          # 7. 物理粉碎可能自动生成的临时身份文件
           sudo mkdir -p /var/lib/zerotier-one
           sudo rm -f /var/lib/zerotier-one/identity.secret
           sudo rm -f /var/lib/zerotier-one/identity.public
 
+          # 8. 强行注入你的固定私钥
           echo "${{ secrets.ZEROTIER_IDENTITY_SECRET }}" | sudo tee /var/lib/zerotier-one/identity.secret > /dev/null
           sudo chmod 600 /var/lib/zerotier-one/identity.secret
 
+          # 9. 重新启动服务并强制加入网络
           sudo systemctl start zerotier-one
-          
           sleep 2
           sudo zerotier-cli join ${{ secrets.ZEROTIER_NETWORK_ID }}
 
+          # 10. 打印当前的真实 Node ID 供验证
           echo "========================================="
           echo "当前虚拟机的真正固定 Node ID 是："
           sudo zerotier-cli info
           echo "========================================="
+
 
 
 
