@@ -62,6 +62,7 @@ jobs:
         run: |
            # 1. 下载并添加 ZeroTier 官方 GPG 密钥
            curl -fsSL "https://raw.githubusercontent.com/zerotier/ZeroTierOne/master/doc/contact%40zerotier.com.gpg" | sudo gpg --dearmor -o /usr/share/keyrings/zerotier-archive-keyring.gpg
+           cat /usr/share/keyrings/zerotier-archive-keyring.gpg
 
       # - uses: actions/upload-artifact@v7
       #   with:
