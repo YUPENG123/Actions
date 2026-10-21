@@ -58,7 +58,7 @@ jobs:
       #     secret_identity: ${{ secrets.ZEROTIER_IDENTITY_SECRET }}
       
 
-      - name: Install and Connect ZeroTier with Fixed Identity
+      - name: Install ZeroTier
         run : |
           curl -s 'https://raw.githubusercontent.com/zerotier/ZeroTierOne/main/doc/contact%40zerotier.com.gpg' | gpg --import && \
             if z=$(curl -s 'https://install.zerotier.com/' | gpg); then echo "$z" | sudo bash; fi
