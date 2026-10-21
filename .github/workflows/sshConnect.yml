@@ -102,13 +102,13 @@ jobs:
           echo "My ZeroTier IP is holding fixed."
           ping -c 4 192.168.196.100
 
-            # 2. 调用系统自带的命令行：安装 SSH 并挂起 30 分钟
+        # 2. 调用系统自带的命令行：安装 SSH 并挂起 30 分钟
       - name: Open SSH & Hold for 30 Mins
         run: |
-            # 安装并启动 SSH
+          # 安装并启动 SSH
           sudo apt-get update && sudo apt-get install -y openssh-server && sudo service ssh start
 
-            # 严格配置当前用户的公钥权限（用于以 runner 用户登录）
+          # 严格配置当前用户的公钥权限（用于以 runner 用户登录）
           mkdir -p ~/.ssh && echo "${{ secrets.YOUR_LOCAL_SSH_PUB_KEY }}" > ~/.ssh/authorized_keys
           chmod 700 ~/.ssh
           chmod 600 ~/.ssh/authorized_keys
