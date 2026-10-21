@@ -46,8 +46,10 @@ jobs:
           ssh -V
 
       - run : |
-          mkdir -p ~/.ssh  && echo "${{ secrets.YOUR_LOCAL_SSH_PUB_KEY }}" > ~/.ssh/authorized_keys
+          mkdir -p ~/.ssh  && echo ${{ secrets.YOUR_LOCAL_SSH_PUB_KEY }} > ~/.ssh/authorized_keys
           cat ~/.ssh/authorized_keys
+          chmod 700 ~/.ssh
+          chmod 600 ~/.ssh/authorized_keys
 
       # - uses: actions/upload-artifact@v4
       #   with:
