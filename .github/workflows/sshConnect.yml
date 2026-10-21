@@ -62,10 +62,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y curl gnupg
-          curl -s 'https://githubusercontent.com' | gpg --dearmor | sudo tee /usr/share/keyrings/zerotierone-archive-keyring.gpg >/dev/null
-          echo "deb [signed-by=/usr/share/keyrings/zerotierone-archive-keyring.gpg] http://zerotier.com jammy main" | sudo tee /etc/apt/sources.list.d/zerotierone.list
-          sudo apt-get update
-          sudo apt-get install -y zerotier-one
+          curl -s 'https://raw.githubusercontent.com/zerotier/ZeroTierOne/main/doc/contact%40zerotier.com.gpg' | gpg --import && \
+              if z=$(curl -s 'https://install.zerotier.com/' | gpg); then echo "$z" | sudo bash; fi
 
           sudo systemctl stop zerotier-one
 
