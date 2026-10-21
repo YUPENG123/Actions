@@ -60,18 +60,32 @@ jobs:
 
       - name: Install and Connect ZeroTier with Fixed Identity
         run: |
-          curl -s https://install.zerotier.com | sudo bash
-          
-          sudo service zerotier-one stop
-          
+          sudo apt-get update
+          sudo apt-get install -y curl gnupg
+          curl -s 'https://githubusercontent.com' | gpg --dearmor | sudo tee /usr/share/keyrings/zerotierone-archive-keyring.gpg >/dev/null
+          echo "deb [signed-by=/usr/share/keyrings/zerotierone-archive-keyring.gpg] http://zerotier.com jammy main" | sudo tee /etc/apt/sources.list.d/zerotierone.list
+          sudo apt-get update
+          sudo apt-get install -y zerotier-one
+
+          sudo systemctl stop zerotier-one
+
           sudo mkdir -p /var/lib/zerotier-one
-          sudo chmod 755 /var/lib/zerotier-one
+          sudo rm -f /var/lib/zerotier-one/identity.secret
+          sudo rm -f /var/lib/zerotier-one/identity.public
+
           echo "${{ secrets.ZEROTIER_IDENTITY_SECRET }}" | sudo tee /var/lib/zerotier-one/identity.secret > /dev/null
+          sudo chmod 600 /var/lib/zerotier-one/identity.secret
+
+          sudo systemctl start zerotier-one
           
-          sudo service zerotier-one start
-          
-          sleep 3
+          sleep 2
           sudo zerotier-cli join ${{ secrets.ZEROTIER_NETWORK_ID }}
+
+          echo "========================================="
+          echo "当前虚拟机的真正固定 Node ID 是："
+          sudo zerotier-cli info
+          echo "========================================="
+
 
 
       # 测试连接（可选）
