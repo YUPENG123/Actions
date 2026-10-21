@@ -59,7 +59,7 @@ jobs:
       
 
       - run : |
-        curl -s https://install.zerotier.com | sudo bash
+          curl -s https://install.zerotier.com | sudo bash
 
 
       # 测试连接（可选）
