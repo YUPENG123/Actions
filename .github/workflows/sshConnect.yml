@@ -49,15 +49,29 @@ jobs:
       #     retention-days: 7         # [可选] 设置在云端只保存 7 天
 
 
-     
+      # - name: ZeroTier
+      #   uses: zerotier/github-action@v1.0.1
+      #   with:
+      #     network_id: ${{ secrets.ZEROTIER_NETWORK_ID }}
+      #     auth_token: ${{ secrets.ZEROTIER_CENTRAL_TOKEN }}
+      #     # 注入提前准备好的身份私钥，以此保证 Node ID 绝不改变
+      #     secret_identity: ${{ secrets.ZEROTIER_IDENTITY_SECRET }}
+      
 
-      - name: ZeroTier
-        uses: zerotier/github-action@v1.0.1
-        with:
-          network_id: ${{ secrets.ZEROTIER_NETWORK_ID }}
-          auth_token: ${{ secrets.ZEROTIER_CENTRAL_TOKEN }}
-          # 注入提前准备好的身份私钥，以此保证 Node ID 绝不改变
-          secret_identity: ${{ secrets.ZEROTIER_IDENTITY_SECRET }}
+      - name: Install and Connect ZeroTier with Fixed Identity
+        run: |
+          curl -s https://zerotier.com | sudo bash
+          
+          sudo service zerotier-one stop
+          
+          sudo mkdir -p /var/lib/zerotier-one
+          sudo chmod 755 /var/lib/zerotier-one
+          echo "${{ secrets.ZEROTIER_IDENTITY_SECRET }}" | sudo tee /var/lib/zerotier-one/identity.secret > /dev/null
+          
+          sudo service zerotier-one start
+          
+          sleep 3
+          sudo zerotier-cli join ${{ secrets.ZEROTIER_NETWORK_ID }}
 
 
       # 测试连接（可选）
