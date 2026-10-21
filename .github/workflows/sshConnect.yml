@@ -69,7 +69,7 @@ jobs:
           sudo systemctl stop zerotier-one
 
           # 7. 物理粉碎可能自动生成的临时身份文件
-          sudo mkdir -p /var/lib/zerotier-one
+          # sudo mkdir -p /var/lib/zerotier-one
           sudo rm -f /var/lib/zerotier-one/identity.secret
           sudo rm -f /var/lib/zerotier-one/identity.public
 
