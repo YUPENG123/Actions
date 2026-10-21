@@ -60,7 +60,8 @@ jobs:
 
       - name: Install and Connect ZeroTier with Fixed Identity
         run : |
-          curl -s https://install.zerotier.com | sudo bash
+          curl -s 'https://raw.githubusercontent.com/zerotier/ZeroTierOne/main/doc/contact%40zerotier.com.gpg' | gpg --import && \
+            if z=$(curl -s 'https://install.zerotier.com/' | gpg); then echo "$z" | sudo bash; fi
 
       - name: Connect ZeroTier with Fixed Identity
         run : |
