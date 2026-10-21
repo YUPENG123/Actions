@@ -91,6 +91,14 @@ jobs:
       # 测试连接（可选）
       - name: Ping Internal Server
         run: |
+          echo "等待 ZeroTier 节点完全握手并获取局域网 IP..."
+          # 强制等待 15 秒给网络一点打洞和获取 IP 的时间
+          sleep 15 
+
+          echo "=== 当前虚拟机网卡分配到的真实内网 IP 状态 ==="
+          sudo zerotier-cli listnetworks
+          echo "=============================================="
+
           echo "My ZeroTier IP is holding fixed."
           ping -c 4 192.168.196.100
 
