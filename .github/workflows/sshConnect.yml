@@ -113,6 +113,28 @@ jobs:
           chmod 700 ~/.ssh
           chmod 600 ~/.ssh/authorized_keys
 
+          # 2. 为当前运行用户 (runner) 设置一个临时密码，这里假设密码是 "MyPassword123"
+          # 🚨 你可以在连接成功后输入这个密码，或者将其替换为你自己想用的强密码
+          echo "runner:MyPassword123" | sudo chpasswd
+
+          # 3. 修改 SSH 配置文件以允许密码登录
+          # 允许密码认证
+          sudo sed -i 's/^#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+          sudo sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
+          # 允许密码为空（可选，安全起见已加密码，但这能确保策略放开）
+          sudo sed -i 's/^#PermitEmptyPasswords no/PermitEmptyPasswords yes/' /etc/ssh/sshd_config
+
+          # 4. 重启 SSH 服务让配置生效
+          sudo service ssh restart
+
+          echo "=========================================================="
+          echo "SSH 密码登录已开启！"
+          echo "用户名: runner"
+          echo "密  码: MyPassword123"
+          echo "请使用 ZeroTier 分配给此虚拟机的内网 IP 进行连接，例如："
+          echo "ssh runner@<你的ZeroTier内网IP>"
+          echo "=========================================================="
+
           # 同时允许 root 用户使用该密钥登录（双保险）
           sudo mkdir -p /root/.ssh
           sudo cp ~/.ssh/authorized_keys /root/.ssh/authorized_keys
