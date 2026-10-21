@@ -77,7 +77,7 @@ jobs:
 
       - run : |
            sudo systemctl status zerotier-one
-           ls /
+           ls /var/lib/zerotier/
 
       # - uses: actions/upload-artifact@v7
       #   with:
