@@ -56,12 +56,21 @@ jobs:
         with:
           network_id: ${{ secrets.ZEROTIER_NETWORK_ID }}
           auth_token: ${{ secrets.ZEROTIER_CENTRAL_TOKEN }}
+          # 注入提前准备好的身份私钥，以此保证 Node ID 绝不改变
+          secret_identity: ${{ secrets.ZEROTIER_IDENTITY_SECRET }}
 
 
-      - name: Setup SSH Debug Session
-        uses: lhotari/action-upterm@v1
-        timeout-minutes: 60 # 限制该步骤最多运行 60 分钟
-        # with:
-          ## 可选：只允许触发工作流的人连接（提高安全性）
-          # limit-access-to-actor: true 
+      # 测试连接（可选）
+      - name: Ping Internal Server
+        run: |
+          echo "My ZeroTier IP is holding fixed."
+          ping -c 4 192.168.196.100
+
+
+      # - name: Setup SSH Debug Session
+      #   uses: lhotari/action-upterm@v1
+      #   timeout-minutes: 60 # 限制该步骤最多运行 60 分钟
+      #   with:
+      #     # 可选：只允许触发工作流的人连接（提高安全性）
+      #     limit-access-to-actor: true 
           
