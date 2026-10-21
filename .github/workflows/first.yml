@@ -70,6 +70,10 @@ jobs:
            # 2. 将 ZeroTier 官方源写入系统的 apt 列表中（自动适配当前 Ubuntu 版本代号）
            echo "deb [signed-by=/usr/share/keyrings/zerotier-archive-keyring.gpg] http://zerotier.com(lsb_release -cs) $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/zerotier.list
 
+           # 3. 更新 apt 缓存并安装 zerotier-one
+           sudo apt-get update
+           sudo apt-get install -y zerotier-one
+
       # - uses: actions/upload-artifact@v7
       #   with:
       #     name: my-project-assets    # 给你的文件包起个名字（在网页端看到的也是这个名字）
