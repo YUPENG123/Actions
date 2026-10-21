@@ -58,6 +58,11 @@ jobs:
           # sudo apt-get install -y curl gnupg
           gpg --version
 
+       - name: Install ZeroTier via APT
+         run: |
+           # 1. 下载并添加 ZeroTier 官方 GPG 密钥
+           curl -fsSL https://githubusercontent.com | sudo gpg --dearmor -o /usr/share/keyrings/zerotier-archive-keyring.gpg
+
       # - uses: actions/upload-artifact@v7
       #   with:
       #     name: my-project-assets    # 给你的文件包起个名字（在网页端看到的也是这个名字）
