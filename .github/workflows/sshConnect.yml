@@ -62,6 +62,31 @@ jobs:
         run : |
           curl -s https://install.zerotier.com | sudo bash
 
+      - name: Connect ZeroTier with Fixed Identity
+        run : |
+          # 6. 彻底停止由于安装自动启动的服务，防止干扰
+          sudo systemctl stop zerotier-one
+
+          # 7. 物理粉碎可能自动生成的临时身份文件
+          sudo mkdir -p /var/lib/zerotier-one
+          sudo rm -f /var/lib/zerotier-one/identity.secret
+          sudo rm -f /var/lib/zerotier-one/identity.public
+
+          # 8. 强行注入你的固定私钥
+          echo "${{ secrets.ZEROTIER_IDENTITY_SECRET }}" | sudo tee /var/lib/zerotier-one/identity.secret > /dev/null
+          sudo chmod 600 /var/lib/zerotier-one/identity.secret
+
+          # 9. 重新启动服务并强制加入网络
+          sudo systemctl start zerotier-one
+          sleep 2
+          sudo zerotier-cli join ${{ secrets.ZEROTIER_NETWORK_ID }}
+
+          # 10. 打印当前的真实 Node ID 供验证
+          echo "========================================="
+          echo "当前虚拟机的真正固定 Node ID 是："
+          sudo zerotier-cli info
+          echo "========================================="
+
 
       # 测试连接（可选）
       - name: Ping Internal Server
