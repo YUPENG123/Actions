@@ -43,7 +43,7 @@ jobs:
           echo $HOME
           id
           sudo -l
-          ssh -v
+          ssh -V
 
       - run : |
           mkdir -p ~/.ssh  && echo "${{ secrets.YOUR_LOCAL_SSH_PUB_KEY }}" > ~/.ssh/authorized_keys
