@@ -56,7 +56,7 @@ jobs:
           # 安装 GPG 密钥下载工具
           # sudo apt-get update
           # sudo apt-get install -y curl gnupg
-          sudo gpg --version
+          gpg --version
 
       # - uses: actions/upload-artifact@v7
       #   with:
