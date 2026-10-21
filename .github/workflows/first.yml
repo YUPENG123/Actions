@@ -39,11 +39,12 @@ jobs:
           ls -la / > 1.txt
           pwd >> 1.txt
           cat 1.txt
+          who
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: my-project-assets    # 给你的文件包起个名字（在网页端看到的也是这个名字）
-          path: |                    # 可以是文件，也可以是文件夹
-            1.txt                    
+      # - uses: actions/upload-artifact@v4
+      #   with:
+      #     name: my-project-assets    # 给你的文件包起个名字（在网页端看到的也是这个名字）
+      #     path: |                    # 可以是文件，也可以是文件夹
+      #       1.txt                    
             README.md                 
           retention-days: 7         # [可选] 设置在云端只保存 7 天
