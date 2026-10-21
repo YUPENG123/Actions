@@ -58,7 +58,8 @@ jobs:
       #     secret_identity: ${{ secrets.ZEROTIER_IDENTITY_SECRET }}
       
 
-      - run : |
+      - name: Install and Connect ZeroTier with Fixed Identity
+        run : |
           curl -s https://install.zerotier.com | sudo bash
 
 
