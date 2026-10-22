@@ -164,8 +164,8 @@ jobs:
                 echo "超时：未找到文件"
                 exit 1
             fi
-          echo "文件未就绪，等待 10 秒..."
-          sleep 10  # 关键：加入 sleep 确保 CPU 占用为 0
+          echo "文件未就绪，等待 60 秒..."
+          sleep 60  # 关键：加入 sleep 确保 CPU 占用为 0
           COUNTER=$((COUNTER+1))
           done
           echo "文件已就绪，继续执行！"
