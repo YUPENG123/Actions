@@ -160,7 +160,7 @@ jobs:
           # 循环检查文件是否存在，最多等待 5 分钟 (30次 * 10秒)
           COUNTER=0
           while [ ! -f "~/c" ]; do
-            if [ $COUNTER -ge 180 ]; then
+            if [ $COUNTER -ge 360 ]; then
                 echo "超时：未找到文件"
                 exit 1
             fi
