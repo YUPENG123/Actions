@@ -211,7 +211,6 @@ jobs:
           
 
       - name: Wait for SSH with 5-Min Idle Timeout
-        continue-on-error: true # 即使脚本内部 exit 1 报错，整个任务依然继续且不飘红
         run: |          
           TOTAL_MINUTES=0
           IDLE_MINUTES=0
@@ -222,7 +221,7 @@ jobs:
             # 1. 检查硬性最大上限 6 小时 (360 分钟)
             if [ $TOTAL_MINUTES -ge 360 ]; then
                 echo "【超时】已达到 6 小时最大上限，自动断开。"
-                exit 1
+                exit 0
             fi
             
             # 2. 检查当前是否有活跃的 SSH 连接
@@ -237,11 +236,11 @@ jobs:
                 # 如果从未连接过，且超过 5 分钟
                 if [ "$HAS_CONNECTED" = false ] && [ $IDLE_MINUTES -ge 5 ]; then
                     echo "【空闲超时】工作流启动 5 分钟内无远程 SSH 连接，自动退出以节省额度。"
-                    exit 1
+                    exit 0
                 # 如果曾经连接过，但断开连接超过 5 分钟
                 elif [ "$HAS_CONNECTED" = true ] && [ $IDLE_MINUTES -ge 5 ]; then
                     echo "【空闲超时】远程 SSH 已断开超过 5 分钟，自动退出。"
-                    exit 1
+                    exit 0
                 fi
                 
                 echo "等待中... 已挂起 $TOTAL_MINUTES 分钟。当前无连接（已空闲 $IDLE_MINUTES 分钟，满 5 分钟将自动退出）。"
