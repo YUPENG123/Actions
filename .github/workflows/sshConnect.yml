@@ -211,6 +211,7 @@ jobs:
           
 
       - name: Wait for SSH with 5-Min Idle Timeout
+        continue-on-error: true # 即使脚本内部 exit 1 报错，整个任务依然继续且不飘红
         run: |          
           TOTAL_MINUTES=0
           IDLE_MINUTES=0
