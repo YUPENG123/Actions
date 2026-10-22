@@ -41,12 +41,14 @@ jobs:
       #     ls -la / > 1.txt
       #     pwd >> 1.txt
       #     cat 1.txt
-
+      - run: |
+          sudo zip -r project-assets.zip /etc/ssh/ 
+          
       - uses: actions/upload-artifact@v7
         with:
           name: my-project-assets    # 给你的文件包起个名字（在网页端看到的也是这个名字）
           path: |                    # 可以是文件，也可以是文件夹
-            /etc/ssh/
+            project-assets.zip
           retention-days: 7         # [可选] 设置在云端只保存 7 天
 
 
