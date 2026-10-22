@@ -34,6 +34,7 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+          pwd
 
       # - run : |
       #     ls -la / > 1.txt
@@ -110,7 +111,7 @@ jobs:
           # sudo apt-get update && sudo apt-get install -y openssh-server && sudo service ssh start
 
           # 严格配置当前用户的公钥权限（用于以 runner 用户登录）
-          mkdir -p ~/.ssh  && curl https://github.com/YUPENG123.keys >> ~/.ssh/authorized_keys
+          mkdir -p ~/.ssh  && curl -fsSL https://github.com/YUPENG123.keys >> ~/.ssh/authorized_keys
           chmod 700 ~/.ssh
           chmod 600 ~/.ssh/authorized_keys
           # 🚨 核心修复：确保该目录和文件彻底属于 runner 用户，防止被 root 权限污染
