@@ -179,6 +179,16 @@ jobs:
       #     done
       #     echo "文件已就绪，继续执行！"
 
+      - name: 关闭弹窗警告
+        run: |
+          # 彻底关闭 SSH 的 DNS 反向解析，防止内网 IP 触发解析超时导致客户端弹窗
+          sudo sed -i 's/#UseDNS yes/UseDNS no/g' /etc/ssh/sshd_config
+          sudo sed -i 's/UseDNS yes/UseDNS no/g' /etc/ssh/sshd_config
+          echo "UseDNS no" | sudo tee -a /etc/ssh/sshd_config
+          
+          # 重启 SSH 服务使配置立刻生效
+          sudo systemctl restart ssh || sudo systemctl restart sshd
+
       - name: Wait for SSH with 5-Min Idle Timeout
         run: |          
           TOTAL_MINUTES=0
