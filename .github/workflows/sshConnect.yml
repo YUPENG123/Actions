@@ -163,27 +163,7 @@ jobs:
           # 💡 直接借用 Linux 自带的 sleep 锁，控制阻塞时间为 1800 秒（30分钟）
           # sleep 1800 
 
-      # - name: Wait for SSH (Up to 6 hours)
-      #   run: |
-      #     # 关键：用 sudo 创建这个文件，并把所有权给 runner 用户，确保后续两边都能读写
-      #     # sudo touch /c
-      #     # sudo chown runner:runner /c
-      #     # rm -f /c 
-      #     # 先删掉，让循环开始挂起
-          
-      #     # 循环检查文件是否存在，最多等待 5 分钟 (30次 * 10秒)
-      #     COUNTER=0
-      #     while [ ! -f "$HOME/c" ]; do
-      #       if [ $COUNTER -ge 360 ]; then
-      #           echo "超时：未找到文件"
-      #           exit 1
-      #       fi
-      #       echo "等待中... 已挂起 $COUNTER 分钟。在终端执行 touch c 即可退出。"
-      #       sleep 60  
-      #       # 关键：加入 sleep 确保 CPU 占用为 0
-      #       COUNTER=$((COUNTER+1))
-      #     done
-      #     echo "文件已就绪，继续执行！"
+      
 
       - name: Restore Fixed  Host Key
         run: |
@@ -208,48 +188,70 @@ jobs:
           # 4. 重启 SSH 服务让它重新推导公钥并生效
           sudo systemctl restart ssh || sudo service ssh restart
 
-          
 
-      - name: Wait for SSH with 5-Min Idle Timeout
-        run: |          
-          TOTAL_MINUTES=0
-          IDLE_MINUTES=0
-          # 标记是否曾经连接过
-          HAS_CONNECTED=false  
+      - name: Wait for SSH (Up to 6 hours)
+        run: |
+          # 关键：用 sudo 创建这个文件，并把所有权给 runner 用户，确保后续两边都能读写
+          # sudo touch /c
+          # sudo chown runner:runner /c
+          # rm -f /c 
+          # 先删掉，让循环开始挂起
           
+          # 循环检查文件是否存在，最多等待 5 分钟 (30次 * 10秒)
+          COUNTER=0
           while [ ! -f "$HOME/c" ]; do
-            # 1. 检查硬性最大上限 6 小时 (360 分钟)
-            if [ $TOTAL_MINUTES -ge 360 ]; then
-                echo "【超时】已达到 6 小时最大上限，自动断开。"
+            if [ $COUNTER -ge 360 ]; then
+                echo "超时：未找到文件"
                 exit 0
             fi
-            
-            # 2. 检查当前是否有活跃的 SSH 连接
-            # GitHub Actions 默认 SSH 端口是 22。ss -tna 检查是否有 ESTABLISHED 状态的连接
-            if ss -tna | grep -E "ESTAB" | grep -E '(:22|[^0-9]22)(\s|$)'; then
-                HAS_CONNECTED=true
-                IDLE_MINUTES=0 # 有连接，空闲计数器清零
-                echo "等待中... 已挂起 $TOTAL_MINUTES 分钟。当前有活跃的 SSH 连接。"
-            else
-                IDLE_MINUTES=$((IDLE_MINUTES+1))
-                
-                # 如果从未连接过，且超过 5 分钟
-                if [ "$HAS_CONNECTED" = false ] && [ $IDLE_MINUTES -ge 5 ]; then
-                    echo "【空闲超时】工作流启动 5 分钟内无远程 SSH 连接，自动退出以节省额度。"
-                    exit 0
-                # 如果曾经连接过，但断开连接超过 5 分钟
-                elif [ "$HAS_CONNECTED" = true ] && [ $IDLE_MINUTES -ge 5 ]; then
-                    echo "【空闲超时】远程 SSH 已断开超过 5 分钟，自动退出。"
-                    exit 0
-                fi
-                
-                echo "等待中... 已挂起 $TOTAL_MINUTES 分钟。当前无连接（已空闲 $IDLE_MINUTES 分钟，满 5 分钟将自动退出）。"
-            fi
-            
-            sleep 60
-            TOTAL_MINUTES=$((TOTAL_MINUTES+1))
+            echo "等待中... 已挂起 $COUNTER 分钟。在终端执行 touch c 即可退出。"
+            sleep 60  
+            # 关键：加入 sleep 确保 CPU 占用为 0
+            COUNTER=$((COUNTER+1))
           done
-          echo "【成功】检测到 ~/c 文件，顺畅退出循环！"
+          echo "文件已就绪，继续执行！"
+          
+
+      # - name: Wait for SSH with 5-Min Idle Timeout
+      #   run: |          
+      #     TOTAL_MINUTES=0
+      #     IDLE_MINUTES=0
+      #     # 标记是否曾经连接过
+      #     HAS_CONNECTED=false  
+          
+      #     while [ ! -f "$HOME/c" ]; do
+      #       # 1. 检查硬性最大上限 6 小时 (360 分钟)
+      #       if [ $TOTAL_MINUTES -ge 360 ]; then
+      #           echo "【超时】已达到 6 小时最大上限，自动断开。"
+      #           exit 0
+      #       fi
+            
+      #       # 2. 检查当前是否有活跃的 SSH 连接
+      #       # GitHub Actions 默认 SSH 端口是 22。ss -tna 检查是否有 ESTABLISHED 状态的连接
+      #       if ss -tna | grep -E "ESTAB" | grep -E '(:22|[^0-9]22)(\s|$)'; then
+      #           HAS_CONNECTED=true
+      #           IDLE_MINUTES=0 # 有连接，空闲计数器清零
+      #           echo "等待中... 已挂起 $TOTAL_MINUTES 分钟。当前有活跃的 SSH 连接。"
+      #       else
+      #           IDLE_MINUTES=$((IDLE_MINUTES+1))
+                
+      #           # 如果从未连接过，且超过 5 分钟
+      #           if [ "$HAS_CONNECTED" = false ] && [ $IDLE_MINUTES -ge 5 ]; then
+      #               echo "【空闲超时】工作流启动 5 分钟内无远程 SSH 连接，自动退出以节省额度。"
+      #               exit 0
+      #           # 如果曾经连接过，但断开连接超过 5 分钟
+      #           elif [ "$HAS_CONNECTED" = true ] && [ $IDLE_MINUTES -ge 5 ]; then
+      #               echo "【空闲超时】远程 SSH 已断开超过 5 分钟，自动退出。"
+      #               exit 0
+      #           fi
+                
+      #           echo "等待中... 已挂起 $TOTAL_MINUTES 分钟。当前无连接（已空闲 $IDLE_MINUTES 分钟，满 5 分钟将自动退出）。"
+      #       fi
+            
+      #       sleep 60
+      #       TOTAL_MINUTES=$((TOTAL_MINUTES+1))
+      #     done
+      #     echo "【成功】检测到 ~/c 文件，顺畅退出循环！"
 
 
       # - name: Setup SSH Debug Session
