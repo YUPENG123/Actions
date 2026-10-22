@@ -89,7 +89,7 @@ jobs:
           echo "========================================="
 
 
-      # 测试连接（可选）
+        # 测试连接（可选）
       - name: Ping Internal Server
         run: |
           echo "等待 ZeroTier 节点完全握手并获取局域网 IP..."
@@ -153,7 +153,22 @@ jobs:
           
           echo "已经进入局域网（IP 已固定），请随时连入..."
           # 💡 直接借用 Linux 自带的 sleep 锁，控制阻塞时间为 1800 秒（30分钟）
-          sleep 1800 
+          # sleep 1800 
+
+      - name: Wait for file safely
+        run: |
+          # 循环检查文件是否存在，最多等待 5 分钟 (30次 * 10秒)
+          COUNTER=0
+          while [ ! -f "./target-file.txt" ]; do
+            if [ $COUNTER -ge 30 ]; then
+                echo "超时：未找到文件"
+                exit 1
+            fi
+          echo "文件未就绪，等待 10 秒..."
+          sleep 10  # 关键：加入 sleep 确保 CPU 占用为 0
+          COUNTER=$((COUNTER+1))
+          done
+          echo "文件已就绪，继续执行！"
 
       # - name: Setup SSH Debug Session
       #   uses: lhotari/action-upterm@v1
