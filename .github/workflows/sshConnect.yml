@@ -183,16 +183,24 @@ jobs:
       #     done
       #     echo "文件已就绪，继续执行！"
 
-      - name: Restore Fixed ed25519 Host Key
+      - name: Restore Fixed  Host Key
         run: |
           # 1. 写入固定的 ed25519 私钥
           echo "${{ secrets.SSH_HOST_ED25519_KEY }}" | sudo tee /etc/ssh/ssh_host_ed25519_key > /dev/null
+          echo "${{ secrets.SSH_HOST_RSA_KEY }}" | sudo tee /etc/ssh/ssh_host_rsa_key > /dev/null
+          echo "${{ secrets.SSH_HOST_ECDSA_KEY }}" | sudo tee /etc/ssh/ssh_host_ecdsa_key > /dev/null
           
           # 2. 删除原有的 ed25519 公钥，逼系统重新生成
           sudo rm -f /etc/ssh/ssh_host_ed25519_key.pub
+          sudo rm -f /etc/ssh/ssh_host_rsa_key.pub
+          sudo rm -f /etc/ssh/ssh_host_ecdsa_key.pub
           
           # 3. 严格设置私钥权限
           sudo chmod 600 /etc/ssh/ssh_host_ed25519_key
+          sudo chmod 600 /etc/ssh/ssh_host_rsa_key
+          sudo chmod 600 /etc/ssh/ssh_host_ed25519_key
+          sudo chown root:root /etc/ssh/ssh_host_ecdsa_key
+          sudo chown root:root /etc/ssh/ssh_host_rsa_key
           sudo chown root:root /etc/ssh/ssh_host_ed25519_key
           
           # 4. 重启 SSH 服务让它重新推导公钥并生效
