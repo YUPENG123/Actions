@@ -42,7 +42,7 @@ jobs:
       #     pwd >> 1.txt
       #     cat 1.txt
 
-      
+
       # - run: |
       #     sudo zip -r project-assets.zip /etc/ssh/ 
       #     sudo chown runner:runner project-assets.zip
@@ -183,17 +183,22 @@ jobs:
       #     done
       #     echo "文件已就绪，继续执行！"
 
-      - name: 关闭弹窗警告
+      - name: Restore Fixed ed25519 Host Key
         run: |
-          # 彻底关闭 SSH 的 DNS 反向解析，防止内网 IP 触发解析超时导致客户端弹窗
-          sudo sed -i 's/#UseDNS yes/UseDNS no/g' /etc/ssh/sshd_config
-          sudo sed -i 's/UseDNS yes/UseDNS no/g' /etc/ssh/sshd_config
-          echo "UseDNS no" | sudo tee -a /etc/ssh/sshd_config
+          # 1. 写入固定的 ed25519 私钥
+          echo "${{ secrets.SSH_HOST_ED25519_KEY }}" | sudo tee /etc/ssh/ssh_host_ed25519_key > /dev/null
           
-          # 重启 SSH 服务使配置立刻生效
-          sudo systemctl restart ssh || sudo systemctl restart sshd
+          # 2. 删除原有的 ed25519 公钥，逼系统重新生成
+          sudo rm -f /etc/ssh/ssh_host_ed25519_key.pub
+          
+          # 3. 严格设置私钥权限
+          sudo chmod 600 /etc/ssh/ssh_host_ed25519_key
+          sudo chown root:root /etc/ssh/ssh_host_ed25519_key
+          
+          # 4. 重启 SSH 服务让它重新推导公钥并生效
+          sudo systemctl restart ssh || sudo service ssh restart
 
-          ls ~/.ssh
+          
 
       - name: Wait for SSH with 5-Min Idle Timeout
         run: |          
