@@ -156,18 +156,24 @@ jobs:
           # 💡 直接借用 Linux 自带的 sleep 锁，控制阻塞时间为 1800 秒（30分钟）
           # sleep 1800 
 
-      - name: Wait for file safely
+      - name: Wait for SSH (Up to 6 hours)
         run: |
+          # 关键：用 sudo 创建这个文件，并把所有权给 runner 用户，确保后续两边都能读写
+          sudo touch /c
+          sudo chown runner:runner /c
+          rm -f /c # 先删掉，让循环开始挂起
+          
           # 循环检查文件是否存在，最多等待 5 分钟 (30次 * 10秒)
           COUNTER=0
-          while [ ! -f "~/c" ]; do
+          while [ ! -f "$HOME/c" ]; do
             if [ $COUNTER -ge 360 ]; then
                 echo "超时：未找到文件"
                 exit 1
             fi
-          echo "文件未就绪，等待 60 秒..."
-          sleep 60  # 关键：加入 sleep 确保 CPU 占用为 0
-          COUNTER=$((COUNTER+1))
+            echo "等待中... 已挂起 $COUNTER 分钟。在终端执行 touch /c 即可退出。"
+            sleep 60  
+            # 关键：加入 sleep 确保 CPU 占用为 0
+            COUNTER=$((COUNTER+1))
           done
           echo "文件已就绪，继续执行！"
 
