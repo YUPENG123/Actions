@@ -161,7 +161,8 @@ jobs:
           # 关键：用 sudo 创建这个文件，并把所有权给 runner 用户，确保后续两边都能读写
           sudo touch /c
           sudo chown runner:runner /c
-          rm -f /c # 先删掉，让循环开始挂起
+          rm -f /c 
+          # 先删掉，让循环开始挂起
           
           # 循环检查文件是否存在，最多等待 5 分钟 (30次 * 10秒)
           COUNTER=0
