@@ -189,6 +189,8 @@ jobs:
           # 重启 SSH 服务使配置立刻生效
           sudo systemctl restart ssh || sudo systemctl restart sshd
 
+          ls ~/.ssh
+
       - name: Wait for SSH with 5-Min Idle Timeout
         run: |          
           TOTAL_MINUTES=0
