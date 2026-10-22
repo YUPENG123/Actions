@@ -195,7 +195,7 @@ jobs:
             
             # 2. 检查当前是否有活跃的 SSH 连接
             # GitHub Actions 默认 SSH 端口是 22。ss -tna 检查是否有 ESTABLISHED 状态的连接
-            if ss -tna | grep -q ":22\s.*ESTABLISHED"; then
+            if ss -tna | grep -E "ESTAB" | grep -E '(:22|[^0-9]22)(\s|$)'; then
                 HAS_CONNECTED=true
                 IDLE_MINUTES=0 # 有连接，空闲计数器清零
                 echo "等待中... 已挂起 $TOTAL_MINUTES 分钟。当前有活跃的 SSH 连接。"
