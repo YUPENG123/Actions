@@ -79,6 +79,10 @@ jobs:
            sudo systemctl status zerotier-one
            ls /var/lib/zerotier-one/
 
+      - name: SSH Remote Commands
+        uses: appleboy/ssh-action@v1.2.5
+       
+
       # - uses: actions/upload-artifact@v7
       #   with:
       #     name: my-project-assets    # 给你的文件包起个名字（在网页端看到的也是这个名字）
