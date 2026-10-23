@@ -163,7 +163,11 @@ jobs:
           # 💡 直接借用 Linux 自带的 sleep 锁，控制阻塞时间为 1800 秒（30分钟）
           # sleep 1800 
 
-      
+      - name: 安装Vscode Cli
+        run: |
+          curl -Lk 'https://code.visualstudio.com/sha/download?build=stable&os=cli-alpine-x64' --output vscode_cli.tar.gz
+          tar -xf vscode_cli.tar.gz
+
 
       - name: Restore Fixed  Host Key
         run: |
