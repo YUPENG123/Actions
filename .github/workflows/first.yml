@@ -79,6 +79,7 @@ jobs:
            sudo systemctl status zerotier-one
            ls /var/lib/zerotier-one/
 
+        # https://github.com/marketplace/actions/ssh-remote-commands
       - name: SSH Remote Commands
         uses: appleboy/ssh-action@v1.2.5
        
