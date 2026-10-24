@@ -174,13 +174,9 @@ jobs:
           ./code --version
           ./code tunnel --help
           ./code tunnel user --help
+          ./code tunnel user login --help
 
-          # 2. 强行创建凭证所需的本地文件夹
-           mkdir -p ~/.vscode/cli
-
-          # 3. 核心技巧：不用大包，直接在 Actions 容器里精准生成全新的 token.json 认证文件
-          # 这样它只会读取登录状态（不会触发之前的 401），且由于没有机器绑定文件，它会为当前容器分配一个全新的隧道 ID
-          echo "{\"$VSCODE_TUNNEL_AUTH\"}" > ~/.vscode/cli/token.json
+          ./code tunnel user login --provider github --access-token {{$VSCODE_TUNNEL_AUTH}}
           
           # 4. 启动隧道（此时已经拥有了本地登录状态）
           ./code tunnel --accept-server-license-terms  --name actions-runner-${{ github.run_id }}
