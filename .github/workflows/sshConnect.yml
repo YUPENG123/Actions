@@ -173,6 +173,7 @@ jobs:
           tar -xf vscode_cli.tar.gz
           ./code --version
           ./code tunnel --help
+          ./code tunnel user --help
           
           # 4. 启动隧道（此时已经拥有了本地登录状态）
           ./code tunnel --accept-server-license-terms --access-token "$VSCODE_TUNNEL_AUTH" --name actions-runner-${{ github.run_id }}
