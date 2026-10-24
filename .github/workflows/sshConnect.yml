@@ -178,15 +178,8 @@ jobs:
           curl -sSLk 'https://code.visualstudio.com/sha/download?build=stable&os=cli-alpine-x64' --output vscode_cli.tar.gz
           tar -xf vscode_cli.tar.gz
           ./code --version
-          ./code tunnel --help
-          ./code tunnel user --help
-          ./code tunnel user login --help
-
-          # ./code tunnel user login --provider github --access-token ${{secrets.GITHUB_TOKEN}}
           
-          # 4. 启动隧道（此时已经拥有了本地登录状态）
-          VSCODE_TUNNEL_ACCESS_TOKEN="${{ secrets.GITHUB_TOKEN }}" ./code tunnel --accept-server-license-terms  --name actions-runner
-          ls ~/.vscode/cli/
+
 
       # # https://github.com/marketplace/actions/run-vscode-server
       # - name: Run VSCode Server
