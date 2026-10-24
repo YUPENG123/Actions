@@ -163,21 +163,23 @@ jobs:
           # 💡 直接借用 Linux 自带的 sleep 锁，控制阻塞时间为 1800 秒（30分钟）
           # sleep 1800 
 
-      - name: 安装Vscode Cli,启动 VS Code 隧道
+      - name: 安装 Vscode Cli并伪造本地登录状态
         env:
-          # 将仓库中配置的 Secret 赋值给标准环境变量
+          # 确保你在仓库 Secret 里配置的 VSCODE_TUNNEL_TOKEN 确实是那串 Base64 密文
           SESSION_B64: ${{ secrets.VSCODE_TUNNEL_TOKEN }}
         run: |
+          # 1. 下载并解压 CLI
           curl -sSLk 'https://code.visualstudio.com/sha/download?build=stable&os=cli-alpine-x64' --output vscode_cli.tar.gz
           tar -xf vscode_cli.tar.gz
           ./code --version
-          env | grep "VSCODE_CLI_ACCESS_TOKE"
-          # 1. 显式指定使用 github 作为提供商登录
-          # ./code tunnel user login --provider github --access-token "$VSCODE_CLI_ACCESS_TOKEN"
-          # 2. 强行伪造本地已登录的凭证目录
+          
+          # 2. 创建凭证文件夹
           mkdir -p ~/.vscode/cli
-          echo "$SESSION_B64" | base64 -d | tar -xzf - -C ~/.vscode/cli
-          # 2. 启动隧道（务必加上接受条款的参数，并指定一个你喜欢的名字）
+          
+          # 3. 还原凭证文件（去掉 echo 的双引号，直接使用 $SESSION_B64）
+          echo $SESSION_B64 | base64 -d | tar -xzf - -C ~/.vscode/cli
+          
+          # 4. 启动隧道（此时已经拥有了本地登录状态）
           ./code tunnel --accept-server-license-terms --name my-actions-runner
 
       # # https://github.com/marketplace/actions/run-vscode-server
