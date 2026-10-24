@@ -166,7 +166,7 @@ jobs:
       - name: 安装Vscode Cli,启动 VS Code 隧道
         env:
           # 将仓库中配置的 Secret 赋值给标准环境变量
-          VSCODE_CLI_ACCESS_TOKEN: ${{ secrets.VSCODE_TUNNEL_TOKEN }}
+          SESSION_B64: ${{ secrets.VSCODE_TUNNEL_TOKEN }}
         run: |
           curl -sSLk 'https://code.visualstudio.com/sha/download?build=stable&os=cli-alpine-x64' --output vscode_cli.tar.gz
           tar -xf vscode_cli.tar.gz
@@ -174,6 +174,9 @@ jobs:
           env | grep "VSCODE_CLI_ACCESS_TOKE"
           # 1. 显式指定使用 github 作为提供商登录
           # ./code tunnel user login --provider github --access-token "$VSCODE_CLI_ACCESS_TOKEN"
+          # 2. 强行伪造本地已登录的凭证目录
+          mkdir -p ~/.vscode/cli
+          echo "$SESSION_B64" | base64 -d | tar -xzf - -C ~/.vscode/cli
           # 2. 启动隧道（务必加上接受条款的参数，并指定一个你喜欢的名字）
           ./code tunnel --accept-server-license-terms --name my-actions-runner
 
