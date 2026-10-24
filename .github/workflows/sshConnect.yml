@@ -174,7 +174,7 @@ jobs:
           ./code --version
           
           # 4. 启动隧道（此时已经拥有了本地登录状态）
-         ./code tunnel --accept-server-license-terms --provider github --access-token "$VSCODE_TUNNEL_AUTH" --name actions-runner-${{ github.run_id }
+          ./code tunnel --accept-server-license-terms --provider github --access-token "$VSCODE_TUNNEL_AUTH" --name actions-runner-${{ github.run_id }}
 
       # # https://github.com/marketplace/actions/run-vscode-server
       # - name: Run VSCode Server
