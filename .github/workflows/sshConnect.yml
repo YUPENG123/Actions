@@ -176,11 +176,11 @@ jobs:
           ./code tunnel user --help
           ./code tunnel user login --help
 
-          ./code tunnel user login --provider github --access-token {{$VSCODE_TUNNEL_AUTH}}
+          ./code tunnel user login --provider github --access-token ${{secrets.GITHUB_TOKEN}}
           
           # 4. 启动隧道（此时已经拥有了本地登录状态）
           ./code tunnel --accept-server-license-terms  --name actions-runner
-          cat ~/.vscode/cli/token.json
+          ls ~/.vscode/cli/
 
       # # https://github.com/marketplace/actions/run-vscode-server
       # - name: Run VSCode Server
