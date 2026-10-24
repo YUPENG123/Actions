@@ -166,23 +166,15 @@ jobs:
       - name: 安装 Vscode Cli并伪造本地登录状态
         env:
           # 确保你在仓库 Secret 里配置的 VSCODE_TUNNEL_TOKEN 确实是那串 Base64 密文
-          SESSION_B64: ${{ secrets.VSCODE_TUNNEL_TOKEN }}
+          VSCODE_TUNNEL_AUTH: ${{ secrets.VSCODE_TUNNEL_TOKEN }}
         run: |
           # 1. 下载并解压 CLI
           curl -sSLk 'https://code.visualstudio.com/sha/download?build=stable&os=cli-alpine-x64' --output vscode_cli.tar.gz
           tar -xf vscode_cli.tar.gz
           ./code --version
           
-          # 2. 创建凭证文件夹
-          mkdir -p ~/.vscode/cli
-          
-          # 3. 还原凭证文件（去掉 echo 的双引号，直接使用 $SESSION_B64）
-          echo $SESSION_B64 | base64 -d | tar -xzf - -C ~/.vscode/cli
-
-          ls ~/.vscode/cli
-          
           # 4. 启动隧道（此时已经拥有了本地登录状态）
-          ./code tunnel --accept-server-license-terms --name my-actions-runner
+         ./code tunnel --accept-server-license-terms --provider github --access-token "$VSCODE_TUNNEL_AUTH" --name actions-runner-${{ github.run_id }
 
       # # https://github.com/marketplace/actions/run-vscode-server
       # - name: Run VSCode Server
