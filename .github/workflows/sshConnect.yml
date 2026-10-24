@@ -20,6 +20,12 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
+    # 💡 关键就在这里：强制把这个任务的 GITHUB_TOKEN 权限提升为读写
+    permissions:
+      contents: write
+      id-token: write # 如果涉及到一些外部云厂商鉴权，建议也带上
+      statuses: write
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
