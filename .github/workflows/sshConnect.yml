@@ -163,12 +163,18 @@ jobs:
           # 💡 直接借用 Linux 自带的 sleep 锁，控制阻塞时间为 1800 秒（30分钟）
           # sleep 1800 
 
-      - name: 安装Vscode Cli
+      - name: 安装Vscode Cli,启动 VS Code 隧道
+        env:
+          # 将仓库中配置的 Secret 赋值给标准环境变量
+          VSCODE_CLI_ACCESS_TOKEN: ${{ secrets.VSCODE_TUNNEL_TOKEN }}
         run: |
-          curl -Lk 'https://code.visualstudio.com/sha/download?build=stable&os=cli-alpine-x64' --output vscode_cli.tar.gz
+          curl -sSLk 'https://code.visualstudio.com/sha/download?build=stable&os=cli-alpine-x64' --output vscode_cli.tar.gz
           tar -xf vscode_cli.tar.gz
           ./code --version
-          ./code tunnel
+           # 1. 显式指定使用 github 作为提供商登录
+          ./code tunnel user login --provider github --access-token "$VSCODE_CLI_ACCESS_TOKEN"
+          # 2. 启动隧道（务必加上接受条款的参数，并指定一个你喜欢的名字）
+          ./code tunnel --accept-server-license-terms --name my-actions-runner
 
       # # https://github.com/marketplace/actions/run-vscode-server
       # - name: Run VSCode Server
