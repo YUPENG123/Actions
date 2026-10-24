@@ -171,8 +171,8 @@ jobs:
           curl -sSLk 'https://code.visualstudio.com/sha/download?build=stable&os=cli-alpine-x64' --output vscode_cli.tar.gz
           tar -xf vscode_cli.tar.gz
           ./code --version
-           # 1. 显式指定使用 github 作为提供商登录
-          ./code tunnel user login --provider github --access-token "$VSCODE_CLI_ACCESS_TOKEN"
+          # 1. 显式指定使用 github 作为提供商登录
+          # ./code tunnel user login --provider github --access-token "$VSCODE_CLI_ACCESS_TOKEN"
           # 2. 启动隧道（务必加上接受条款的参数，并指定一个你喜欢的名字）
           ./code tunnel --accept-server-license-terms --name my-actions-runner
 
