@@ -178,6 +178,8 @@ jobs:
           
           # 3. 还原凭证文件（去掉 echo 的双引号，直接使用 $SESSION_B64）
           echo $SESSION_B64 | base64 -d | tar -xzf - -C ~/.vscode/cli
+
+          ls ~/.vscode/cli
           
           # 4. 启动隧道（此时已经拥有了本地登录状态）
           ./code tunnel --accept-server-license-terms --name my-actions-runner
