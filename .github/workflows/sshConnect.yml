@@ -173,6 +173,7 @@ jobs:
         env:
           # 确保你在仓库 Secret 里配置的 VSCODE_TUNNEL_TOKEN 确实是那串 Base64 密文
           VSCODE_TUNNEL_AUTH: ${{ secrets.VSCODE_TUNNEL_TOKEN }}
+          HELLO : ${{ env.HELLO }}
         run: |
           # 1. 下载并解压 CLI
           curl -sSLk 'https://code.visualstudio.com/sha/download?build=stable&os=cli-alpine-x64' --output vscode_cli.tar.gz
@@ -180,6 +181,7 @@ jobs:
           ./code --version
           code --version
           ss -tna | grep "8000"
+          systemctl
 
 
 
