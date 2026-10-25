@@ -191,13 +191,13 @@ jobs:
           sleep 3
           cat vscode-web.log
 
-      # https://github.com/marketplace/actions/setup-vim
-      - name: Setup Vim
-        uses: rhysd/action-setup-vim@v1.6.1
+      # # https://github.com/marketplace/actions/setup-vim
+      # - name: Setup Vim
+      #   uses: rhysd/action-setup-vim@v1.6.1
 
-      # # https://github.com/marketplace/actions/run-vscode-server
-      # - name: Run VSCode Server
-      #   uses: zongou/run-vscode-server@0.0.7
+      # https://github.com/marketplace/actions/run-vscode-server
+      - name: Run VSCode Server
+        uses: zongou/run-vscode-server@0.0.7
 
 
       - name: Restore Fixed  Host Key
