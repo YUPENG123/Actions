@@ -180,6 +180,16 @@ jobs:
           curl -sSLk 'https://code.visualstudio.com/sha/download?build=stable&os=cli-alpine-x64' --output vscode_cli.tar.gz
           tar -xf vscode_cli.tar.gz
           ./code --version
+          
+      - name: Start VS Code serve-web in Background
+        run: |
+          # 1. 后台启动 VS Code Web 服务器，监听 8000 端口，并允许所有 IP 访问
+          # 使用 nohup 和 & 让其在后台持续运行，不阻塞当前 Step
+          nohup ./code serve-web --host 0.0.0.0 --port 8000 --without-connection-token > vscode-web.log 2>&1 &
+          
+          # 等待 3 秒确保服务启动
+          sleep 3
+          cat vscode-web.log
 
 
 
