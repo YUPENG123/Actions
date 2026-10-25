@@ -191,7 +191,9 @@ jobs:
           sleep 3
           cat vscode-web.log
 
-
+      # https://github.com/marketplace/actions/setup-vim
+      - name: Setup Vim
+        uses: rhysd/action-setup-vim@v1.6.1
 
       # # https://github.com/marketplace/actions/run-vscode-server
       # - name: Run VSCode Server
