@@ -36,9 +36,9 @@ jobs:
           echo test, and deploy your project.
 
       - run : |
-          ls -la / > 1.txt
-          pwd >> 1.txt
-          cat 1.txt
+          ls -la / > ../1.txt
+          pwd >> ../1.txt
+          cat ../1.txt
           whoami
           echo $HOME
           id
@@ -112,4 +112,5 @@ jobs:
       #   run: sleep 6h
 
 
-      
+      - name: Run Gemini CLI
+        uses: google-github-actions/run-gemini-cli@v0.1.22
