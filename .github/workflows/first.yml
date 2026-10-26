@@ -45,18 +45,18 @@ jobs:
           sudo -l
           ssh -V
 
-      - run : |
-          mkdir -p ~/.ssh  && curl https://github.com/YUPENG123.keys >> ~/.ssh/authorized_keys
-          cat ~/.ssh/authorized_keys
-          chmod 700 ~/.ssh
-          chmod 600 ~/.ssh/authorized_keys
+      # - run : |
+      #     mkdir -p ~/.ssh  && curl https://github.com/YUPENG123.keys >> ~/.ssh/authorized_keys
+      #     cat ~/.ssh/authorized_keys
+      #     chmod 700 ~/.ssh
+      #     chmod 600 ~/.ssh/authorized_keys
 
-      - run : |
-          # sudo apt update && sudo apt install ZeroTier-one
-          # 安装 GPG 密钥下载工具
-          # sudo apt-get update
-          # sudo apt-get install -y curl gnupg
-          gpg --version
+      # - run : |
+      #     # sudo apt update && sudo apt install ZeroTier-one
+      #     # 安装 GPG 密钥下载工具
+      #     # sudo apt-get update
+      #     # sudo apt-get install -y curl gnupg
+      #     gpg --version
 
       # - name: Install ZeroTier via APT
       #   run: |
@@ -112,4 +112,4 @@ jobs:
       #   run: sleep 6h
 
 
-      - uses: fawazahmed0/action-debug-vscode@main
+      
