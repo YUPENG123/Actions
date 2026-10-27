@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "Actions",
+			"path": "."
+		},
+		{
+			"name": "bootstrap-5-tutorial",
+			"path": "../bootstrap-5-tutorial"
+		}
+	],
+	"settings": {}
+}
