@@ -8,8 +8,7 @@
     "vscode": {
       "settings": {
         // 让编辑器在保存代码时，自动帮我们格式化对齐 HTML/CSS 样式，再也不用手动调缩进了
-        "editor.formatOnSave": true,
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "editor.formatOnSave": true
       },
       "extensions": [
         "ms-vscode.live-preview",         // 1. 之前带你起飞的微软官方「Live Preview 实时预览」插件，每次开机直接预装好
