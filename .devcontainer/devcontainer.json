@@ -1,0 +1,14 @@
+{
+  "name": "My Universal Env",
+  "customizations": {
+    "codespaces": {
+      "repositories": {
+        "YUPENG123/bootstrap-5-tutorial": {
+          "permissions": {
+            "contents": "write"
+          }
+        }
+      }
+    }
+  }
+}
