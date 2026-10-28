@@ -10,6 +10,7 @@
 		}
 	],
 	"settings": {
-		"liveServer.settings.multiRootWorkspaceName": "bootstrap-5-tutorial"
+		"liveServer.settings.multiRootWorkspaceName": "bootstrap-5-tutorial",
+		"liveServer.settings.port": 5500
 	}
 }
