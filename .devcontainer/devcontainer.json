@@ -4,10 +4,10 @@
     "vscode": {
       "extensions": [
         "MS-CEINTL.vscode-language-pack-zh-hans",
-        "ritwickdey.LiveServer",
         "ms-vscode.remote-server",
         "ms-vscode.remote-explorer",
-        "github.vscode-github-actions"
+        "github.vscode-github-actions",
+        "ms-vscode.live-server"
       ]
     }
   }
