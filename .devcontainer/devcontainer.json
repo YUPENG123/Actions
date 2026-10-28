@@ -1,0 +1,14 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/universal",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "MS-CEINTL.vscode-language-pack-zh-hans",
+        "ritwickdey.LiveServer",
+        "ms-vscode.remote-server",
+        "ms-vscode.remote-explorer",
+        "github.vscode-github-actions"
+      ]
+    }
+  }
+}
