@@ -9,5 +9,7 @@
 			"path": "../bootstrap-5-tutorial"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "bootstrap-5-tutorial"
+	}
 }
