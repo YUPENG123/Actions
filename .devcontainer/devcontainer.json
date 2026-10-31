@@ -9,6 +9,15 @@
         "github.vscode-github-actions",
         "ms-vscode.live-server"
       ]
+    },
+    "codespaces": {
+      "repositories": {
+        "YUPENG123/bootstrap-5-tutorial": {
+          "permissions": {
+            "contents": "write"
+          }
+        }
+      }
     }
   }
 }
