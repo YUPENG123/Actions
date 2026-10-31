@@ -12,10 +12,8 @@
     },
     "codespaces": {
       "repositories": {
-        "YUPENG123/bootstrap-5-tutorial": {
-          "permissions": {
-            "contents": "write"
-          }
+        "YUPENG123/*": {
+            "permissions": "write-all"
         }
       }
     }
