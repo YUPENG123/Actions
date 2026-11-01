@@ -7,7 +7,11 @@
         "ms-vscode.remote-server",
         "ms-vscode.remote-explorer",
         "github.vscode-github-actions",
-        "ms-vscode.live-server"
+        "ms-vscode.live-server",
+        "ms-vscode-remote.remote-containers",
+        "GitHub.codespaces",
+        "ms-vscode-remote.remote-ssh-edit",
+        "ms-vscode-remote.remote-ssh"
       ]
     }
   }
