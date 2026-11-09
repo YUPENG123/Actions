@@ -20,6 +20,10 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
+    # 💡 关键步骤：在这里临时声明这个 Job 拥有的权限
+    permissions:
+      contents: write  # 临时增加对仓库代码内容的“写权限”，允许把 css 文件推回来
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
