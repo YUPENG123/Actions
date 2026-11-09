@@ -116,5 +116,5 @@ jobs:
       #   run: sleep 6h
 
 
-      - name: Run Gemini CLI
-        uses: google-github-actions/run-gemini-cli@v0.1.22
+      # - name: Run Gemini CLI
+      #   uses: google-github-actions/run-gemini-cli@v0.1.22
