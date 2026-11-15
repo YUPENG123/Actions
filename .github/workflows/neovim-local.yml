@@ -224,6 +224,17 @@ jobs:
           sudo systemctl restart ssh || sudo service ssh restart
 
 
+
+      - name: 安装nvim
+        run: |
+          # sudo apt update && apt intall nvim
+
+
+
+
+
+
+
       - name: Wait for SSH (Up to 6 hours)
         run: |
           # 关键：用 sudo 创建这个文件，并把所有权给 runner 用户，确保后续两边都能读写
