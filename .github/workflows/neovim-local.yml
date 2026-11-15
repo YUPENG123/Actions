@@ -228,7 +228,7 @@ jobs:
       - name: 安装nvim
         run: |
           # sudo apt update && apt intall nvim
-
+          sudo snap install nvim --classic
 
 
 
