@@ -194,7 +194,7 @@ jobs:
           HELLO : ${{ env.HELLO }}
         run: |
           # 1. 下载并解压 CLI
-          curl -sSLk 'https://code.visualstudio.com/sha/download?build=stable&os=cli-alpine-x64' --output ../vscode_cli.tar.gz
+          curl -sSLk 'https://code.visualstudio.com/sha/download?build=stable&os=cli-alpine-x64' --output $HOME/vscode_cli.tar.gz
           tar -xf ../vscode_cli.tar.gz
           ../code --version
           
