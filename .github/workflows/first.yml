@@ -48,6 +48,7 @@ jobs:
           id
           sudo -l
           ssh -V
+          nvim
 
       # - run : |
       #     mkdir -p ~/.ssh  && curl https://github.com/YUPENG123.keys >> ~/.ssh/authorized_keys
