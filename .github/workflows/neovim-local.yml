@@ -1,0 +1,298 @@
+# This is a basic workflow to help you get started with Actions
+
+name: NeoVim-local
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  # push:
+    # branches: [ "main" ]
+  # pull_request:
+    # branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # 💡 关键就在这里：强制把这个任务的 GITHUB_TOKEN 权限提升为读写
+    permissions:
+      contents: write
+      id-token: write # 如果涉及到一些外部云厂商鉴权，建议也带上
+      statuses: write
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v7
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
+          pwd
+          ss -tna
+          systemctl
+
+      # - run : |
+      #     ls -la / > 1.txt
+      #     pwd >> 1.txt
+      #     cat 1.txt
+
+
+      # - run: |
+      #     sudo zip -r project-assets.zip /etc/ssh/ 
+      #     sudo chown runner:runner project-assets.zip
+          
+      # - uses: actions/upload-artifact@v7
+      #   with:
+      #     name: my-project-assets    # 给你的文件包起个名字（在网页端看到的也是这个名字）
+      #     path: |                    # 可以是文件，也可以是文件夹
+      #       project-assets.zip
+      #     retention-days: 7         # [可选] 设置在云端只保存 7 天
+
+
+      # - name: ZeroTier
+      #   uses: zerotier/github-action@v1.0.1
+      #   with:
+      #     network_id: ${{ secrets.ZEROTIER_NETWORK_ID }}
+      #     auth_token: ${{ secrets.ZEROTIER_CENTRAL_TOKEN }}
+      #     # 注入提前准备好的身份私钥，以此保证 Node ID 绝不改变
+      #     secret_identity: ${{ secrets.ZEROTIER_IDENTITY_SECRET }}
+      
+
+      - name: Install ZeroTier
+        run : |
+          curl -s 'https://raw.githubusercontent.com/zerotier/ZeroTierOne/main/doc/contact%40zerotier.com.gpg' | gpg --import && \
+            if z=$(curl -s 'https://install.zerotier.com/' | gpg); then echo "$z" | sudo bash; fi
+
+      - name: Connect ZeroTier with Fixed Identity
+        run : |
+          # 6. 彻底停止由于安装自动启动的服务，防止干扰
+          sudo systemctl stop zerotier-one
+
+          # 7. 物理粉碎可能自动生成的临时身份文件
+          # sudo mkdir -p /var/lib/zerotier-one
+          sudo rm -f /var/lib/zerotier-one/identity.secret
+          sudo rm -f /var/lib/zerotier-one/identity.public
+
+          # 8. 强行注入你的固定私钥
+          echo "${{ secrets.ZEROTIER_IDENTITY_SECRET }}" | sudo tee /var/lib/zerotier-one/identity.secret > /dev/null
+          sudo chmod 600 /var/lib/zerotier-one/identity.secret
+
+          # 9. 重新启动服务并强制加入网络
+          sudo systemctl start zerotier-one
+          sleep 2
+          sudo zerotier-cli join ${{ secrets.ZEROTIER_NETWORK_ID }}
+
+          # 10. 打印当前的真实 Node ID 供验证
+          echo "========================================="
+          echo "当前虚拟机的真正固定 Node ID 是："
+          sudo zerotier-cli info
+          echo "========================================="
+
+
+
+        # 测试连接（可选）
+      # - name: Ping Internal Server
+      #   run: |
+      #     echo "等待 ZeroTier 节点完全握手并获取局域网 IP..."
+      #     # 强制等待 15 秒给网络一点打洞和获取 IP 的时间
+      #     sleep 15 
+
+      #     echo "=== 当前虚拟机网卡分配到的真实内网 IP 状态 ==="
+      #     sudo zerotier-cli listnetworks
+      #     echo "=============================================="
+
+      #     echo "My ZeroTier IP is holding fixed."
+      #     ping -c 4 192.168.196.100
+
+
+
+      - name: 安装公钥
+        run: |
+          # 安装并启动 SSH
+          # sudo apt-get update && sudo apt-get install -y openssh-server && sudo service ssh start
+
+          # 严格配置当前用户的公钥权限（用于以 runner 用户登录）
+          mkdir -p ~/.ssh  && curl -fsSL https://github.com/YUPENG123.keys >> ~/.ssh/authorized_keys
+          chmod 700 ~/.ssh
+          chmod 600 ~/.ssh/authorized_keys
+          # 🚨 核心修复：确保该目录和文件彻底属于 runner 用户，防止被 root 权限污染
+          sudo chown -R runner:runner ~/.ssh
+
+          # 2. 为当前运行用户 (runner) 设置一个临时密码，这里假设密码是 "MyPassword123"
+          # 🚨 你可以在连接成功后输入这个密码，或者将其替换为你自己想用的强密码
+          # echo "runner:MyPassword123" | sudo chpasswd
+
+          # 3. 修改 SSH 配置文件以允许密码登录
+          # 允许密码认证
+          # sudo sed -i 's/^#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+          # sudo sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
+          # 允许密码为空（可选，安全起见已加密码，但这能确保策略放开）
+          # sudo sed -i 's/^#PermitEmptyPasswords no/PermitEmptyPasswords yes/' /etc/ssh/sshd_config
+
+          # 4. 重启 SSH 服务让配置生效
+          # sudo service ssh restart
+
+          # echo "=========================================================="
+          # echo "SSH 密码登录已开启！"
+          # echo "用户名: runner"
+          # echo "密  码: MyPassword123"
+          # echo "请使用 ZeroTier 分配给此虚拟机的内网 IP 进行连接，例如："
+          # echo "ssh runner@<你的ZeroTier内网IP>"
+          # echo "=========================================================="
+
+          # 同时允许 root 用户使用该密钥登录（双保险）
+          # sudo mkdir -p /root/.ssh
+          # sudo cp ~/.ssh/authorized_keys /root/.ssh/authorized_keys
+          # sudo chmod 700 /root/.ssh && sudo chmod 600 /root/.ssh/authorized_keys
+
+          # echo "=========================================================="
+          # echo "【连接提示】已经进入局域网，请使用以下命令连接："
+          # echo "ssh runner@<你在 ZeroTier 控制台看分配给本机的 IP>"
+          # echo "或者："
+          # echo "ssh root@<你在 ZeroTier 控制台看分配给本机的 IP>"
+          # echo "=========================================================="
+          
+          
+          # echo "已经进入局域网（IP 已固定），请随时连入..."
+          # 💡 直接借用 Linux 自带的 sleep 锁，控制阻塞时间为 1800 秒（30分钟）
+          # sleep 1800 
+
+      - name: 安装 Vscode Cli并伪造本地登录状态
+        env:
+          # 确保你在仓库 Secret 里配置的 VSCODE_TUNNEL_TOKEN 确实是那串 Base64 密文
+          VSCODE_TUNNEL_AUTH: ${{ secrets.VSCODE_TUNNEL_TOKEN }}
+          HELLO : ${{ env.HELLO }}
+        run: |
+          # 1. 下载并解压 CLI
+          curl -sSLk 'https://code.visualstudio.com/sha/download?build=stable&os=cli-alpine-x64' --output vscode_cli.tar.gz
+          tar -xf vscode_cli.tar.gz
+          ./code --version
+          
+      - name: Start VS Code serve-web in Background
+        run: |
+          # 1. 后台启动 VS Code Web 服务器，监听 8000 端口，并允许所有 IP 访问
+          # 使用 nohup 和 & 让其在后台持续运行，不阻塞当前 Step
+          nohup ./code serve-web --host 0.0.0.0 --port 8000 --without-connection-token > vscode-web.log 2>&1 &
+          
+          # 等待 3 秒确保服务启动
+          sleep 3
+          cat vscode-web.log
+
+      # # https://github.com/marketplace/actions/setup-vim
+      # - name: Setup Vim
+      #   uses: rhysd/action-setup-vim@v1.6.1
+
+      # https://github.com/marketplace/actions/run-vscode-server
+      # - name: Run VSCode Server
+      #   uses: zongou/run-vscode-server@0.0.7
+
+
+      - name: Restore Fixed  Host Key
+        run: |
+          # 1. 写入固定的 ed25519 私钥
+          echo "${{ secrets.SSH_HOST_ED25519_KEY }}" | sudo tee /etc/ssh/ssh_host_ed25519_key > /dev/null
+          echo "${{ secrets.SSH_HOST_RSA_KEY }}" | sudo tee /etc/ssh/ssh_host_rsa_key > /dev/null
+          echo "${{ secrets.SSH_HOST_ECDSA_KEY }}" | sudo tee /etc/ssh/ssh_host_ecdsa_key > /dev/null
+          
+          # 2. 删除原有的 ed25519 公钥，逼系统重新生成
+          sudo rm -f /etc/ssh/ssh_host_ed25519_key.pub
+          sudo rm -f /etc/ssh/ssh_host_rsa_key.pub
+          sudo rm -f /etc/ssh/ssh_host_ecdsa_key.pub
+          
+          # 3. 严格设置私钥权限
+          sudo chmod 600 /etc/ssh/ssh_host_ed25519_key
+          sudo chmod 600 /etc/ssh/ssh_host_rsa_key
+          sudo chmod 600 /etc/ssh/ssh_host_ed25519_key
+          sudo chown root:root /etc/ssh/ssh_host_ecdsa_key
+          sudo chown root:root /etc/ssh/ssh_host_rsa_key
+          sudo chown root:root /etc/ssh/ssh_host_ed25519_key
+          
+          # 4. 重启 SSH 服务让它重新推导公钥并生效
+          sudo systemctl restart ssh || sudo service ssh restart
+
+
+      - name: Wait for SSH (Up to 6 hours)
+        run: |
+          # 关键：用 sudo 创建这个文件，并把所有权给 runner 用户，确保后续两边都能读写
+          # sudo touch /c
+          # sudo chown runner:runner /c
+          # rm -f /c 
+          # 先删掉，让循环开始挂起
+          
+          # 循环检查文件是否存在，最多等待 5 分钟 (30次 * 10秒)
+          COUNTER=0
+          while [ ! -f "$HOME/c" ]; do
+            if [ $COUNTER -ge 360 ]; then
+                echo "超时：未找到文件"
+                exit 0
+            fi
+            echo "等待中... 已挂起 $COUNTER 分钟。在终端执行 touch c 即可退出。"
+            sleep 60  
+            # 关键：加入 sleep 确保 CPU 占用为 0
+            COUNTER=$((COUNTER+1))
+          done
+          echo "文件已就绪，继续执行！"
+          
+
+      # - name: Wait for SSH with 5-Min Idle Timeout
+      #   run: |          
+      #     TOTAL_MINUTES=0
+      #     IDLE_MINUTES=0
+      #     # 标记是否曾经连接过
+      #     HAS_CONNECTED=false  
+          
+      #     while [ ! -f "$HOME/c" ]; do
+      #       # 1. 检查硬性最大上限 6 小时 (360 分钟)
+      #       if [ $TOTAL_MINUTES -ge 360 ]; then
+      #           echo "【超时】已达到 6 小时最大上限，自动断开。"
+      #           exit 0
+      #       fi
+            
+      #       # 2. 检查当前是否有活跃的 SSH 连接
+      #       # GitHub Actions 默认 SSH 端口是 22。ss -tna 检查是否有 ESTABLISHED 状态的连接
+      #       if ss -tna | grep -E "ESTAB" | grep -E '(:22|[^0-9]22)(\s|$)'; then
+      #           HAS_CONNECTED=true
+      #           IDLE_MINUTES=0 # 有连接，空闲计数器清零
+      #           echo "等待中... 已挂起 $TOTAL_MINUTES 分钟。当前有活跃的 SSH 连接。"
+      #       else
+      #           IDLE_MINUTES=$((IDLE_MINUTES+1))
+                
+      #           # 如果从未连接过，且超过 5 分钟
+      #           if [ "$HAS_CONNECTED" = false ] && [ $IDLE_MINUTES -ge 5 ]; then
+      #               echo "【空闲超时】工作流启动 5 分钟内无远程 SSH 连接，自动退出以节省额度。"
+      #               exit 0
+      #           # 如果曾经连接过，但断开连接超过 5 分钟
+      #           elif [ "$HAS_CONNECTED" = true ] && [ $IDLE_MINUTES -ge 5 ]; then
+      #               echo "【空闲超时】远程 SSH 已断开超过 5 分钟，自动退出。"
+      #               exit 0
+      #           fi
+                
+      #           echo "等待中... 已挂起 $TOTAL_MINUTES 分钟。当前无连接（已空闲 $IDLE_MINUTES 分钟，满 5 分钟将自动退出）。"
+      #       fi
+            
+      #       sleep 60
+      #       TOTAL_MINUTES=$((TOTAL_MINUTES+1))
+      #     done
+      #     echo "【成功】检测到 ~/c 文件，顺畅退出循环！"
+
+
+      # - name: Setup SSH Debug Session
+      #   uses: lhotari/action-upterm@v1
+      #   timeout-minutes: 60 # 限制该步骤最多运行 60 分钟
+      #   with:
+      #     # 可选：只允许触发工作流的人连接（提高安全性）
+      #     limit-access-to-actor: true 
+          
