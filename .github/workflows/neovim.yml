@@ -46,6 +46,6 @@ jobs:
           sudo -l
           ssh -V
 
-      - name: Lazy.nvim Archived Plugin Checker
-        uses: yutkat/lazy-nvim-archived-checker@v1.0.2
+      - name: Setup Vim
+        uses: rhysd/action-setup-vim@v1.6.1
 
