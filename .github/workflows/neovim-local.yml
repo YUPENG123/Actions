@@ -230,7 +230,7 @@ jobs:
           # sudo apt update && apt intall nvim
           sudo snap install nvim --classic
           cat << 'EOF' >> ~/.bash_profile
-          
+          echo "Profile loaded!"
           if [ -n "$BASH_VERSION" ]; then
               if [ -f "$HOME/.bashrc" ]; then
                   . "$HOME/.bashrc"
