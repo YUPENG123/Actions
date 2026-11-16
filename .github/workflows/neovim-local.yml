@@ -61,6 +61,10 @@ jobs:
           git config --global user.email "yp523ne@163.com"
 
 
+      - name: Save GITHUB_WORKSPACE to .bashrc
+        run: echo "export GITHUB_WORKSPACE=\"$GITHUB_WORKSPACE\"" >> ~/.bashrc
+
+
       - name: 安装nvim
         run: |
           # sudo apt update && apt intall nvim
