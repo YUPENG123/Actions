@@ -45,6 +45,11 @@ jobs:
           env | sort
 
 
+      - name: Configure Git user
+        run: |
+          git config --global user.name "yp"
+          git config --global user.email "yp523ne@163.com"
+
 
       - name: 安装nvim
         run: |
