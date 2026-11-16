@@ -32,22 +32,18 @@ jobs:
       - name: Chechout main reporitory
         uses: actions/checkout@v7
 
-      # - name: Check secret
-      #   run: |
-      #     if [ -z "${{ secrets.GH_TOKEN }}" ]; then
-      #       echo "GH_TOKEN 是空的！"
-      #     else
-      #       echo "GH_TOKEN 已读取（长度: ${#GH_TOKEN}）"
-      #     fi
-      #   env:
-      #     GH_TOKEN: ${{ secrets.GH_TOKEN }}
-
       - name: Ckechout second reporitory
         uses: actions/checkout@v7
         with:
           repository: ${{ github.repository_owner }}/tailwind-tutorial
           token: ${{ secrets.GH_TOKEN }}
           path: tailwind-tutorial
+
+
+      - name: Configure Git credentials for push
+        run: |
+          git config --global credential.helper store
+          echo "https://YUFENG123:${{ secrets.GH_TOKEN }}@github.com" > ~/.git-credentials
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
