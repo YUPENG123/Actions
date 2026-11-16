@@ -3,6 +3,9 @@
 		{
 			"name": "Actions",
 			"path": "."
+		},
+		{
+			"path": "../tailwind-tutorial"
 		}
 	]
 }
