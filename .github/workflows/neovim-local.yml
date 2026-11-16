@@ -37,7 +37,7 @@ jobs:
         with:
           repository: ${{ github.repository_owner }}/tailwind-tutorial
           token: ${{ secrets.GH_TOKEN }}
-          path: ../tailwind-tutorial
+          path: tailwind-tutorial
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
@@ -57,6 +57,7 @@ jobs:
         run: |
           git config --global user.name "yp"
           git config --global user.email "yp523ne@163.com"
+          mv tailwind-tutorial ../
 
 
       - name: Save GITHUB_WORKSPACE to .bashrc
