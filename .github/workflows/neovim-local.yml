@@ -76,11 +76,12 @@ jobs:
         run: |
           # sudo apt update && apt intall nvim
           # sudo snap install nvim --classic
-          curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+          curl -fLO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
           sudo rm -rf /opt/nvim-linux-x86_64
           sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
           rm -f nvim-linux-x86_64.tar.gz
-          echo 'export PATH="$PATH:/opt/nvim-linux-x86_64/bin"' >> ~/.bashrc
+          sudo ln -sf /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/nvim
+          # echo 'export PATH="$PATH:/opt/nvim-linux-x86_64/bin"' >> ~/.bashrc
           
           cat << 'EOF' >> ~/.bash_profile
           echo "Profile loaded!"
