@@ -38,6 +38,7 @@ jobs:
           repository: ${{ github.repository_owner }}/tailwind-tutorial
           token: ${{ secrets.GH_TOKEN }}
           path: tailwind-tutorial
+          fetch-depth: 0   # 加上这一行：拉取所有分支和完整历史记录
 
 
       - name: Configure Git credentials for push
