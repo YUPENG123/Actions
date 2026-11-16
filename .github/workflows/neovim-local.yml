@@ -39,6 +39,7 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
           path: tailwind-tutorial
           fetch-depth: 0   # 加上这一行：拉取所有分支和完整历史记录
+          persist-credentials: false  # 关闭局部临时凭证，统一使用全局 ~/.git-credentials
 
 
       - name: Configure Git credentials for push
