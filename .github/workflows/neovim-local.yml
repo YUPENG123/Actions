@@ -42,12 +42,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
-      - name: Ckechout second reporitory
-        uses: actions/checkout@v7
-        with:
-          repository: ${{ github.repository_owner }}/tailwind-tutorial
-          token: ${{ secrets.GH_TOKEN }}
-          path: tailwind-tutorial
+      # - name: Ckechout second reporitory
+      #   uses: actions/checkout@v7
+      #   with:
+      #     repository: ${{ github.repository_owner }}/tailwind-tutorial
+      #     token: ${{ secrets.GH_TOKEN }}
+      #     path: tailwind-tutorial
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
