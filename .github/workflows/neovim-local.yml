@@ -42,7 +42,7 @@ jobs:
           echo test, and deploy your project.
           pwd
           ss -tna
-          systemctl
+          env | sort
 
 
 
@@ -58,6 +58,7 @@ jobs:
               fi
           fi
           EOF
+          echo "cd \"$GITHUB_WORKSPACE\"" >> ~/.bashrc
 
 
 
