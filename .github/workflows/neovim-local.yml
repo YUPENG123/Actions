@@ -31,15 +31,13 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Chechout main reporitory
         uses: actions/checkout@v7
-        with:
-          path: Actions
 
       - name: Ckechout second reporitory
         uses: actions/checkout@v7
         with:
           repository: ${{ github.repository_owner }}/tailwind-tutorial
           token: ${{ secrets.GH_TOKEN }}
-          path: tailwind-tutorial
+          path: ../tailwind-tutorial
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
