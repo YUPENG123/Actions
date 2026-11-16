@@ -93,6 +93,13 @@ jobs:
           # 自动静默安装所有插件并退出
           nvim --headless "+Lazy! sync" +qa
 
+      - name: 安装 ripgrep 和 fd
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ripgrep fd-find
+          mkdir -p ~/.local/bin
+          ln -sf $(which fdfind) ~/.local/bin/fd
+
 
       # - run : |
       #     ls -la / > 1.txt
