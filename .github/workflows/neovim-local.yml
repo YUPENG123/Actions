@@ -35,7 +35,7 @@ jobs:
           path: Actions
 
       - name: Ckechout second reporitory
-        uses: action/checkout@v7
+        uses: actions/checkout@v7
         with:
           repository: ${{ github.repository_owner }}/tailwind-tutorial
           token: ${{ secrets.GH_TOKEN }}
