@@ -86,6 +86,12 @@ jobs:
           EOF
           echo "cd \"$GITHUB_WORKSPACE\"" >> ~/.bashrc
 
+      - name: 安装lazyvim
+        run: |
+          git clone https://github.com/LazyVim/starter ~/.config/nvim
+          rm -rf ~/.config/nvim/.git
+          # 自动静默安装所有插件并退出
+          nvim --headless "+Lazy! sync" +qa
 
 
       # - run : |
