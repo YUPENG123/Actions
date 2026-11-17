@@ -32,7 +32,7 @@ jobs:
                 ca-certificates git ninja-build gettext cmake unzip curl build-essential
 
               git clone --depth 1 --branch "$NVIM_VERSION" \
-                https://github.com /tmp/neovim
+                https://github.com/neovim/neovim.git /tmp/neovim
 
               cd /tmp/neovim
               make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=/tmp/nvim-armhf
