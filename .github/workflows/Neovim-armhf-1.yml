@@ -23,11 +23,9 @@ jobs:
       - name: 在 armhf 容器中拉取源码并编译
         env:
           NVIM_VERSION: ${{ github.event.inputs.nvim_version }}
-          REPO_PATH: neovim/neovim.git
         run: |
           docker run --rm --platform linux/arm/v7 \
             -e NVIM_VERSION="$NVIM_VERSION" \
-            -e REPO_PATH="$REPO_PATH" \
             -v "${{ github.workspace }}:/workspace" \
             debian:bookworm-slim \
             bash -c '
@@ -36,8 +34,9 @@ jobs:
               apt-get update && apt-get install -y --no-install-recommends \
                 ca-certificates git ninja-build gettext cmake unzip curl build-essential
 
+              REPO_URL="https://""github.com/neovim/neovim.git"
               git clone --depth 1 --branch "$NVIM_VERSION" \
-                "https://github.com{REPO_PATH}" /tmp/neovim
+                "$REPO_URL" /tmp/neovim
 
               cd /tmp/neovim
               make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=/tmp/nvim-armhf
