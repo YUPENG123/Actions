@@ -1,4 +1,4 @@
-name: Build Neovim for armhf (Ubuntu 24.04)
+name: Build Neovim for armhf
 
 on:
   workflow_dispatch:
@@ -13,20 +13,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 设置 QEMU 模拟器以支持 armhf
-        uses: docker/setup-qemu-action@v4.4.0
+        uses: docker/setup-qemu-action@v3
         with:
           platforms: arm/v7
 
-      - name: 在 Ubuntu 24.04 armhf 容器中拉取源码并编译
+      - name: 拉取 armhf 镜像并编译 Neovim
         env:
           NVIM_VERSION: ${{ github.event.inputs.nvim_version }}
           REPO_PATH: neovim/neovim.git
         run: |
+          docker pull --platform linux/arm/v7 debian:bookworm-slim
           docker run --rm --platform linux/arm/v7 \
             -e NVIM_VERSION="$NVIM_VERSION" \
             -e REPO_PATH="$REPO_PATH" \
             -v "${{ github.workspace }}:/workspace" \
-            ubuntu:24.04 \
+            debian:bookworm-slim \
             bash -c '
               set -e
               export DEBIAN_FRONTEND=noninteractive
@@ -40,11 +41,11 @@ jobs:
               make CMAKE_BUILD_TYPE=Release CMAKE_INSTALL_PREFIX=/tmp/nvim-armhf
               make install
 
-              tar -czvf /workspace/nvim-ubuntu2404-armhf.tar.gz -C /tmp/nvim-armhf .
+              tar -czvf /workspace/nvim-linux-armhf.tar.gz -C /tmp/nvim-armhf .
             '
 
       - name: 上传编译产物 (Artifacts)
         uses: actions/upload-artifact@v4
         with:
-          name: nvim-ubuntu2404-armhf
-          path: nvim-ubuntu2404-armhf.tar.gz
+          name: nvim-linux-armhf
+          path: nvim-linux-armhf.tar.gz
