@@ -10,15 +10,15 @@ on:
 
 jobs:
   build-armhf:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: 设置 QEMU 模拟器以支持 armhf
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4.4.0
         with:
           platforms: all
 
       - name: 设置 Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4.4.1
 
       - name: 在 armhf 容器中拉取源码并编译
         env:
