@@ -81,7 +81,6 @@ jobs:
           sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
           rm -f nvim-linux-x86_64.tar.gz
           sudo ln -sf /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/nvim
-          # echo 'export PATH="$PATH:/opt/nvim-linux-x86_64/bin"' >> ~/.bashrc
 
       - name: 运行系统命令
         run: |
@@ -93,7 +92,6 @@ jobs:
               fi
           fi
           EOF
-          echo 'cd "$GITHUB_WORKSPACE"' >> ~/.bashrc
           
 
       - name: 安装lazyvim
