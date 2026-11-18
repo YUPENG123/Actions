@@ -94,9 +94,7 @@ jobs:
           fi
           EOF
           echo 'cd "$GITHUB_WORKSPACE"' >> ~/.bashrc
-          echo 'tmux' >> ~/.bashrc
-          echo 'cd ../tailwind-tutorial/public' >> ~/.bashrc
-          echo 'git switch lesson-2' >> ~/.bashrc
+          
 
       - name: 安装lazyvim
         run: |
